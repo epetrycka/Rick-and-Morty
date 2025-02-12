@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Input, Button, Select } from 'semantic-ui-react';
+import { Input, Button, Select, Label } from 'semantic-ui-react';
 
 const filterOptions = [
   { key: 'status', text: 'Status', value: 'status' },
@@ -36,6 +36,7 @@ const valueOptions = {
 export default function FilterBar({ onFilter }) {
   const [selectedFilter, setSelectedFilter] = useState(null);
   const [selectedValue, setSelectedValue] = useState(null);
+  const [activeFilters, setActiveFilters] = useState({});
 
   const handleFilterChange = (e, { value }) => {
     setSelectedFilter(value);
@@ -46,33 +47,64 @@ export default function FilterBar({ onFilter }) {
     setSelectedValue(value);
   };
 
-  return (
-    <Input action style={{ alignSelf: 'end', display: 'flex', gap: '0.5rem' }}>
-      <Select 
-        placeholder="Filter by..." 
-        options={filterOptions} 
-        onChange={handleFilterChange} 
-        style={{ borderRadius: '5px' }}
-      />
-      
-      <Select 
-        placeholder="Select value..." 
-        options={selectedFilter ? valueOptions[selectedFilter] : []} 
-        onChange={handleValueChange} 
-        disabled={!selectedFilter} 
-        style={{ borderRadius: '5px' }}
-      />
+  const applyFilter = () => {
+    if (selectedFilter && selectedValue) {
+      const newFilters = { ...activeFilters, [selectedFilter]: selectedValue };
+      setActiveFilters(newFilters);
+      onFilter(selectedFilter, selectedValue);
+    }
+  };
 
-      <Button 
-        type="submit" 
-        disabled={!selectedFilter || !selectedValue} 
-        onClick={() => onFilter(selectedFilter, selectedValue)}
-        style={{ 
-          borderRadius: '5px',
-        }}
-      >
-        Filter
-      </Button>
-    </Input>
+  const removeFilter = (key) => {
+    const updatedFilters = { ...activeFilters };
+    delete updatedFilters[key];
+    setActiveFilters(updatedFilters);
+    onFilter(key, 'all');
+  };
+
+  return (
+    <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: '1rem' }}>
+      <div style={{ display: 'flex', gap: '0.5rem', flexWrap: 'wrap' }}>
+        {Object.entries(activeFilters).map(([key, value]) => (
+          <Label key={key} color='blue'>
+            {key}: {value}
+            <Button
+              icon='close'
+              size='mini'
+              circular
+              compact
+              onClick={() => removeFilter(key)}
+              style={{ marginLeft: '0.5rem' }}
+            />
+          </Label>
+        ))}
+      </div>
+
+      <div style={{ display: 'flex', gap: '0.5rem' }}>
+        <Select 
+          placeholder="Filter by..." 
+          options={filterOptions} 
+          onChange={handleFilterChange} 
+          style={{ borderRadius: '5px' }}
+        />
+        
+        <Select 
+          placeholder="Select value..." 
+          options={selectedFilter ? valueOptions[selectedFilter] : []} 
+          onChange={handleValueChange} 
+          disabled={!selectedFilter} 
+          style={{ borderRadius: '5px' }}
+        />
+
+        <Button 
+          type="submit" 
+          disabled={!selectedFilter || !selectedValue} 
+          onClick={applyFilter}
+          style={{ borderRadius: '5px' }}
+        >
+          Filter
+        </Button>
+      </div>
+    </div>
   );
 }
