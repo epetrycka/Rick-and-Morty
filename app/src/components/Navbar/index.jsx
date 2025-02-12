@@ -24,8 +24,17 @@ export default function Navbar() {
           justifyContent: 'center', 
           alignItems: 'center' 
         }}>
-        <Menu.Item >
-          <Image src='/logo.png' style={{ height: '5rem', width: 'auto' }} />
+        <Menu.Item as={Link} to="/"
+          style={{ 
+            background: 'none', 
+            padding: 0, 
+            display: 'flex', 
+            alignItems: 'center', 
+            justifyContent: 'center' 
+          }}
+          onMouseEnter={e => e.currentTarget.style.background = 'none'}
+          onMouseLeave={e => e.currentTarget.style.background = 'none'}>
+          <Image src='/logo.png' style={{ height: '5rem', width: 'auto' }}/>
         </Menu.Item>
       </Menu.Menu>
       <Menu.Item position='right'>
