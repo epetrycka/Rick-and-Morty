@@ -68,7 +68,8 @@ export default function FilterBar({ onFilter }) {
         {Object.entries(activeFilters).map(([key, value]) => (
           <Label key={key} color='blue'>
             {key}: {value}
-            <Button
+            <Button role='button'
+              aria-label='close'
               icon='close'
               size='mini'
               circular
@@ -96,7 +97,7 @@ export default function FilterBar({ onFilter }) {
           style={{ borderRadius: '5px' }}
         />
 
-        <Button 
+        <Button role='button'
           type="submit" 
           disabled={!selectedFilter || !selectedValue} 
           onClick={applyFilter}

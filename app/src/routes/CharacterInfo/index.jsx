@@ -29,12 +29,14 @@ export default function CharacterInfo() {
                 <div className="image-container">
                   <Image src={character.image} alt={character.name} size="small" />
                   <Button 
-                    size='mini'
-                    content={showEpisodes ? "Hide Episodes" : "Show Episodes"} 
+                    role="button"
+                    size="mini"
                     basic 
                     style={{ margin: '1px' }} 
                     onClick={() => setShowEpisodes(prev => !prev)}
-                  />
+                  >
+                    {showEpisodes ? "Hide Episodes" : "Show Episodes"}
+                  </Button>
                   {showEpisodes && <EpisodesTable characterEpisodes={characterEpisodes} />}
                 </div>
               </div>

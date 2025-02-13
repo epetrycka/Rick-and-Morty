@@ -72,7 +72,7 @@ export default function CharactersList() {
       </nav>
       <div className="section main-content">
         <div className="sidebar">
-          <Button 
+          <Button aria-label='arrow right'
             icon="arrow left" 
             style={{ width: '100%', margin: '2rem' }} 
             disabled={page === 1}
