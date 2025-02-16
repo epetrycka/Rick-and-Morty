@@ -18,7 +18,7 @@ export default function CharacterCard({ character }) {
       maxWidth: '500px',
       height: '100%',
       maxHeight: '105px'
-    }} as={Link} to="/character-info" state={{character}}
+    }} as={Link} to={`/character-info/${character.id}`} state={{character}}
     >
       <Image 
         src={character.image} 

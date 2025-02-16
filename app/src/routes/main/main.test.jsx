@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { render, screen } from '@testing-library/react';
 import { MemoryRouter } from 'react-router-dom';
-import Main from '../main';
+import Main from '.';
 import CharactersList from '../CharactersList';
 import '@testing-library/jest-dom';
 

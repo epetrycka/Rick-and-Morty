@@ -1,9 +1,12 @@
 import React from 'react';
-import CharacterCard from '../CharacterCard';
 import { Grid, GridRow, GridColumn } from 'semantic-ui-react';
 
+import CharacterCard from '../CharacterCard';
 
 export default function Cards({ characters = [] }) {
+  if (characters.length === 0) {
+    return <p style={{ textAlign: 'center', marginTop: '2rem' }}>Brak postaci do wyświetlenia</p>;
+  }
   const rows = 4;
   const columns = 5;
 
