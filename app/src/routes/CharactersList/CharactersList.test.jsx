@@ -14,6 +14,14 @@ const mockCharacters = {
   ],
 };
 
+const mockCharactersPage = {
+  info: { pages: 2 },
+  results: [
+    { id: 3, name: 'Summer Smith', image: 'summer.png' },
+    { id: 4, name: 'Beth Smith', image: 'beth.png' },
+  ],
+};
+
 describe('CharactersList component', () => {
   beforeEach(() => {
     fetch.mockResolvedValue({
@@ -52,22 +60,32 @@ describe('CharactersList component', () => {
   });
 
   test('pagination works correctly', async () => {
+    fetch
+      .mockResolvedValueOnce({
+        json: jest.fn().mockResolvedValue(mockCharacters),
+      })
+      .mockResolvedValueOnce({
+        json: jest.fn().mockResolvedValue(mockCharactersPage),
+      })
+      .mockResolvedValueOnce({
+        json: jest.fn().mockResolvedValue(mockCharactersPage),
+      });
+  
     render(
       <MemoryRouter>
         <CharactersList />
       </MemoryRouter>
     );
-
+  
     await waitFor(() => expect(fetch).toHaveBeenCalledTimes(1));
-
-    const nextButton = screen.getByLabelText(/arrow right/i);
-
+  
+    const nextButton = await screen.findByLabelText(/next page/i);
     fireEvent.click(nextButton);
-
-    await waitFor(() => expect(fetch).toHaveBeenCalledTimes(2));
-
-    expect(screen.getByText('Rick Sanchez')).toBeInTheDocument();
-  });
+  
+    await waitFor(() => expect(fetch).toHaveBeenCalledTimes(3));
+  
+    expect(await screen.findByText(/Summer Smith/i)).toBeInTheDocument();
+  });  
 
   test('prefetches the next page', async () => {
     render(

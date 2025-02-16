@@ -91,6 +91,7 @@ export default function CharactersList() {
         </div>
         <div className="sidebar">
           <Button 
+            aria-label="next page"
             icon="arrow right" 
             style={{ width: '100%', margin: '2rem' }} 
             disabled={page === totalPages}
