@@ -63,7 +63,11 @@ export default function FilterBar({ onFilter }) {
   };
 
   return (
-    <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: '1rem' }}>
+    <div style={{ 
+      display: 'flex', 
+      alignItems: 'center', 
+      justifyContent: 'space-between', 
+      gap: '0.5rem' }}>
       <div style={{ display: 'flex', gap: '0.5rem', flexWrap: 'wrap' }}>
         {Object.entries(activeFilters).map(([key, value]) => (
           <Label key={key} color='blue'>

@@ -37,13 +37,15 @@ describe('CharacterCard component', () => {
   });
 
   test('renders a link to character-info page', () => {
+    const mockCharacter = { id: 1, name: 'Rick Sanchez' };
+  
     render(
       <MemoryRouter>
         <CharacterCard character={mockCharacter} />
       </MemoryRouter>
     );
-
+  
     const link = screen.getByRole('link');
-    expect(link).toHaveAttribute('href', '/character-info');
+    expect(link).toHaveAttribute('href', `/character-info/${mockCharacter.id}`);
   });
 });

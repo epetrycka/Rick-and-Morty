@@ -11,18 +11,13 @@ export default function CharactersList() {
   const [filters, setFilters] = useState({});
   const cache = useRef({});
 
-  useEffect(() => {
-    const filterParams = Object.entries(filters)
+  const fetchCharacters = (pageNumber, appliedFilters) => {
+    const filterParams = Object.entries(appliedFilters)
       .filter(([_, value]) => value && value !== 'all')
       .map(([key, value]) => `${key}=${value}`)
       .join('&');
 
-    const url = `https://rickandmortyapi.com/api/character/?page=${page}${filterParams ? `&${filterParams}` : ''}`;
-
-    if (cache.current[url]) {
-      setCharacters(cache.current[url]); 
-      return;
-    }
+    const url = `https://rickandmortyapi.com/api/character/?page=${pageNumber}${filterParams ? `&${filterParams}` : ''}`;
 
     fetch(url)
       .then(response => response.json())
@@ -32,17 +27,20 @@ export default function CharactersList() {
         setTotalPages(data.info?.pages || 1);
       })
       .catch(error => console.error("Error fetching characters:", error));
+  };
 
+  useEffect(() => {
+    fetchCharacters(page, filters);
   }, [page, filters]);
 
   useEffect(() => {
+    const nextPage = page + 1;
+    if (nextPage > totalPages) return;
+
     const filterParams = Object.entries(filters)
       .filter(([_, value]) => value && value !== 'all')
       .map(([key, value]) => `${key}=${value}`)
       .join('&');
-
-    const nextPage = page + 1;
-    if (nextPage > totalPages) return;
 
     const nextUrl = `https://rickandmortyapi.com/api/character/?page=${nextPage}${filterParams ? `&${filterParams}` : ''}`;
 
@@ -59,10 +57,18 @@ export default function CharactersList() {
   const handleFilter = (key, value) => {
     setFilters(prev => {
       const updatedFilters = { ...prev };
-      value === 'all' ? delete updatedFilters[key] : updatedFilters[key] = value;
+      if (value === 'all') {
+        delete updatedFilters[key];
+      } else {
+        updatedFilters[key] = value;
+      }
+      
+      setPage(1);
+      setTotalPages(1);
+
+      fetchCharacters(1, updatedFilters);
       return updatedFilters;
     });
-    setPage(1);
   };
 
   return (
@@ -72,7 +78,8 @@ export default function CharactersList() {
       </nav>
       <div className="section main-content">
         <div className="sidebar">
-          <Button aria-label='arrow right'
+          <Button
+            aria-label='arrow left'
             icon="arrow left" 
             style={{ width: '100%', margin: '2rem' }} 
             disabled={page === 1}

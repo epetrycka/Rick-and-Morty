@@ -54,8 +54,9 @@ describe('CharacterInfo component', () => {
     );
 
     await waitFor(() => {
-      expect(screen.getByText('Brak danych postaci')).toBeInTheDocument();
+      expect(screen.getByText(/Brak danych postaci/i)).toBeInTheDocument();
     });
+    
   });
 
   test('toggles episodes visibility when button is clicked', () => {

@@ -15,8 +15,9 @@ const mockCharacters = [
 
 test('renders without crashing when no characters are provided', () => {
   render(<Cards characters={[]} />);
-  expect(screen.getByRole('grid')).toBeInTheDocument();
+  expect(screen.getByText('Brak postaci do wyświetlenia')).toBeInTheDocument();
 });
+
 
 test('renders correct number of characters', () => {
   render(

@@ -5,6 +5,7 @@ import { useParams, useLocation } from "react-router-dom";
 import InfoTable from '../../components/InfoTable';
 import EpisodesTable from '../../components/EpisodesTable';
 import { Image, Button } from 'semantic-ui-react';
+import axios from 'axios';
 
 export default function CharacterInfo() {
   const { id } = useParams();
@@ -14,10 +15,11 @@ export default function CharacterInfo() {
   
    useEffect(() => {
     if (!character) {
-      fetch(`https://rickandmortyapi.com/api/character/${id}`)
-        .then(response => response.json())
-        .then(data => setCharacter(data))
-        .catch(error => console.error("Error fetching character:", error));
+      if (!character) {
+        axios.get(`https://rickandmortyapi.com/api/character/${id}`)
+          .then(response => setCharacter(response.data))
+          .catch(error => console.error("Error fetching character:", error));
+      }
     }
   }, [id, character]);
 
