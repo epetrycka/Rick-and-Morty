@@ -22,21 +22,30 @@ export default function CharactersList() {
     const url = `https://rickandmortyapi.com/api/character/?page=${pageNumber}${filterParams ? `&${filterParams}` : ''}`;
   
     if (cache.current[url]) {
-      setCharacters(cache.current[url]);
+      setCharacters(cache.current[url].results);
+      setTotalPages(cache.current[url].totalPages);
       return;
     }
 
     fetch(url)
       .then(response => response.json())
       .then(data => {
-        cache.current[url] = data.results;
+        if (data.error) {
+          console.error("API Error:", data.error);
+          setCharacters([]);
+          setTotalPages(1);
+          return;
+        }
+        cache.current[url] = {
+          results: data.results,
+          totalPages: data.info?.pages || 1
+        };
         setCharacters(data.results || []);
         setTotalPages(data.info?.pages || 1);
       })
       .catch(error => console.error("Error fetching characters:", error));
   };
   
-
   useEffect(() => {
     fetchCharacters(page, filters);
   }, [page, filters]);
@@ -56,7 +65,16 @@ export default function CharactersList() {
       fetch(nextUrl)
         .then(response => response.json())
         .then(data => {
-          cache.current[nextUrl] = data.results;
+          if (data.error) {
+            console.error("API Error:", data.error);
+            setCharacters([]);
+            setTotalPages(1);
+            return;
+          }
+          cache.current[nextUrl] = {
+            results: data.results,
+            totalPages: data.info?.pages || 1
+          };
         })
         .catch(error => console.error("Error prefetching next page:", error));
     }
@@ -72,7 +90,6 @@ export default function CharactersList() {
       }
       
       setPage(1);
-      setTotalPages(1);
 
       fetchCharacters(1, updatedFilters);
       return updatedFilters;
