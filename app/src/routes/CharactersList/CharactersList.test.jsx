@@ -1,8 +1,8 @@
 import React from 'react';
 import { render, screen, fireEvent, waitFor } from '@testing-library/react';
 import { MemoryRouter } from 'react-router-dom';
-import CharactersList from '../CharactersList';
 import '@testing-library/jest-dom';
+import CharactersList from '../CharactersList';
 
 global.fetch = jest.fn();
 

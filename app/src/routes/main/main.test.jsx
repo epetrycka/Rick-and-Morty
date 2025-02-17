@@ -1,9 +1,8 @@
 import * as React from 'react';
 import { render, screen } from '@testing-library/react';
 import { MemoryRouter } from 'react-router-dom';
-import Main from '.';
-import CharactersList from '../CharactersList';
 import '@testing-library/jest-dom';
+import Main from '.';
 
 jest.mock('../CharactersList', () => jest.fn(() => <div data-testid="characters-list">CharactersList</div>));
 

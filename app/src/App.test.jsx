@@ -5,7 +5,7 @@ import App from './App';
 import '@testing-library/jest-dom';
 
 jest.mock('./components/Navbar', () => jest.fn(() => <nav data-testid="navbar">Navbar</nav>));
-jest.mock('./routes/main', () => jest.fn(() => <div data-testid="main-page">Main Page</div>));
+jest.mock('./routes/Main', () => jest.fn(() => <div data-testid="main-page">Main Page</div>));
 jest.mock('./routes/CharactersList', () => jest.fn(() => <div data-testid="characters-list">Characters List</div>));
 jest.mock('./routes/CharacterInfo', () => jest.fn(() => <div data-testid="character-info">Character Info</div>));
 

@@ -1,8 +1,8 @@
 import React from 'react';
 import { render, screen, fireEvent } from '@testing-library/react';
-import FilterBar from './index';
 import { MemoryRouter } from 'react-router-dom';
 import '@testing-library/jest-dom';
+import FilterBar from './index';
 
 describe('FilterBar component', () => {
   test('renders without crashing', () => {

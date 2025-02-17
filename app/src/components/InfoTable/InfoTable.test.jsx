@@ -1,8 +1,8 @@
 import React from 'react';
 import { render, screen } from '@testing-library/react';
-import InfoTable from '../InfoTable';
 import { MemoryRouter } from 'react-router-dom';
 import '@testing-library/jest-dom';
+import InfoTable from '../InfoTable';
 
 
 const mockCharacter = {

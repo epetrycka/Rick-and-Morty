@@ -1,8 +1,8 @@
 import React from 'react';
 import { render, screen } from '@testing-library/react';
 import { MemoryRouter } from 'react-router-dom';
-import CharacterCard from './index';
 import '@testing-library/jest-dom';
+import CharacterCard from './index';
 
 const mockCharacter = {
   name: 'Rick Sanchez',
