@@ -42,12 +42,18 @@ export default function CharactersList() {
       
       const cachedData = sessionStorage.getItem(url);
       if (cachedData) {
-        const { results, totalPages } = JSON.parse(cachedData);
-        setCharacters(results);
-        setTotalPages(totalPages);
-        return;
+        try {
+          const { results, totalPages } = JSON.parse(cachedData);
+          if (Array.isArray(results) && typeof totalPages === 'number') {
+            setCharacters(results);
+            setTotalPages(totalPages);
+            return;
+          }
+        } catch (e) {
+          console.warn("Niepoprawne dane w cache, ponowne pobieranie...");
+        }
       }
-  
+
       try {
         const response = await fetch(url);
         const data = await response.json();

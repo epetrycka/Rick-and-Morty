@@ -1,5 +1,6 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Button, Select, Label } from 'semantic-ui-react';
+import { useLocation } from 'react-router-dom';
 
 const filterOptions = [
   { key: 'status', text: 'Status', value: 'status' },
@@ -9,20 +10,17 @@ const filterOptions = [
 
 const valueOptions = {
   status: [
-    { key: 'all', text: 'All', value: 'all' },
     { key: 'alive', text: 'Alive', value: 'alive' },
     { key: 'dead', text: 'Dead', value: 'dead' },
     { key: 'unknown', text: 'Unknown', value: 'unknown' },
   ],
   gender: [
-    { key: 'all', text: 'All', value: 'all' },
     { key: 'female', text: 'Female', value: 'female' },
     { key: 'male', text: 'Male', value: 'male' },
     { key: 'genderless', text: 'Genderless', value: 'genderless' },
     { key: 'unknown', text: 'Unknown', value: 'unknown' },
   ],
   species: [
-    { key: 'all', text: 'All', value: 'all' },
     { key: 'human', text: 'Human', value: 'human' },
     { key: 'alien', text: 'Alien', value: 'alien' },
     { key: 'humanoid', text: 'Humanoid', value: 'humanoid' },
@@ -34,9 +32,22 @@ const valueOptions = {
 };
 
 export default function FilterBar({ onFilter }) {
+  const location = useLocation();
   const [selectedFilter, setSelectedFilter] = useState(null);
   const [selectedValue, setSelectedValue] = useState(null);
   const [activeFilters, setActiveFilters] = useState({});
+
+  useEffect(() => {
+    const params = new URLSearchParams(location.search);
+    const filtersFromUrl = {};
+    params.forEach((value, key) => {
+      if(key!='page'){
+        filtersFromUrl[key] = value;
+      }
+    });
+
+    setActiveFilters(filtersFromUrl);
+  }, [location.search]);
 
   const handleFilterChange = (e, { value }) => {
     setSelectedFilter(value);
