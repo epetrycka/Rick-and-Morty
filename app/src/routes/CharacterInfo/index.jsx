@@ -1,10 +1,12 @@
-import 'semantic-ui-css/semantic.min.css';
-import './CharacterInfo.css';
 import React, { useState, useEffect } from 'react';
 import { useParams, useLocation } from "react-router-dom";
+import { Image, Button } from 'semantic-ui-react';
+
+import 'semantic-ui-css/semantic.min.css';
+import './CharacterInfo.css';
+
 import InfoTable from '../../components/InfoTable';
 import EpisodesTable from '../../components/EpisodesTable';
-import { Image, Button } from 'semantic-ui-react';
 import axios from 'axios';
 
 export default function CharacterInfo() {
@@ -29,16 +31,16 @@ export default function CharacterInfo() {
 
   return (
       <div className="info-container">
-        <header className="section nav"></header>
         <div className="section info-content">
-          <aside className="section sidebarInfo"></aside>
-          <main className="section contentInfo">
+          <main className="section info-card">
             <div className="leftColumn">
               <InfoTable character={character} />
             </div>
             <div className="rightColumn">
               <div className="image-container">
                 <Image src={character.image} alt={character.name} size="small" />
+              </div>
+              <div className='episodes-container'>
                 <Button 
                   role="button"
                   size="mini"
@@ -52,7 +54,6 @@ export default function CharacterInfo() {
               </div>
             </div>
           </main>
-          <aside className="section sidebarInfo"></aside>
         </div>
         <footer className="footer"></footer>
       </div>

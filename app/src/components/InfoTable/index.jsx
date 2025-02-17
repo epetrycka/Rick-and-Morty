@@ -11,8 +11,8 @@ import {
 export default function InfoTable({ character }) {
   return (
     <div style={{ 
-      maxWidth: '100%', 
-      overflowX: 'auto', 
+      width: '45rem', 
+      overflow: 'auto', 
       display: 'flex', 
       justifyContent: 'center' 
     }}>
@@ -21,9 +21,8 @@ export default function InfoTable({ character }) {
         celled 
         collapsing 
         style={{ 
-          minWidth: '20rem', 
-          maxWidth: '100%', 
-          margin: '2rem auto' 
+          width: '100%', 
+          padding: '5%' 
         }}
       >
         <TableHeader>
@@ -38,22 +37,27 @@ export default function InfoTable({ character }) {
             <TableCell>Status</TableCell>
             <TableCell>{character.status}</TableCell>
           </TableRow>
+
           <TableRow>
             <TableCell>Species</TableCell>
             <TableCell>{character.species}</TableCell>
           </TableRow>
+
           <TableRow>
             <TableCell>Gender</TableCell>
             <TableCell>{character.gender}</TableCell>
           </TableRow>
+
           <TableRow>
             <TableCell>Type</TableCell>
             <TableCell>{character.type || "-"}</TableCell>
           </TableRow>
+
           <TableRow>
             <TableCell>Origin</TableCell>
             <TableCell>{character.origin.name}</TableCell>
           </TableRow>
+
           <TableRow>
             <TableCell>Location</TableCell>
             <TableCell>{character.location.name}</TableCell>

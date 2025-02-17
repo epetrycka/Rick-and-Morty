@@ -12,19 +12,25 @@ export default function CharacterCard({ character }) {
       display: 'flex',
       flexDirection: 'row',
       alignItems: 'center',
-      padding: '1rem',
+      padding: '4%',
       width: '100%',
+      minWidth: '50px',
       maxWidth: '500px',
       height: '100%',
-      maxHeight: '105px'
-    }} as={Link} to={`/character-info/${character.id}`} state={{character}}
-    >
+      minHeight: '50px',
+      maxHeight: '105px',
+      overflow: 'hidden'
+      }} 
+      as={Link} to={`/character-info/${character.id}`} 
+      state={{character}}
+      >
       <Image 
         src={character.image} 
         alt={character.name} 
         size="tiny"
         style={{
           borderRadius: '10px',
+          overflow: 'hidden',
           objectFit: 'cover',
           marginRight: '0.5rem'
         }}
