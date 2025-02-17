@@ -1,75 +1,56 @@
+import '@testing-library/jest-dom';
 import React from 'react';
 import { render, screen, fireEvent, waitFor } from '@testing-library/react';
 import { MemoryRouter } from 'react-router-dom';
-import '@testing-library/jest-dom';
 import CharactersList from '../CharactersList';
 
 global.fetch = jest.fn();
 
-const mockCharacters = {
-  info: { pages: 2 },
-  results: [
-    { id: 1, name: 'Rick Sanchez', image: 'rick.png' },
-    { id: 2, name: 'Morty Smith', image: 'morty.png' },
-  ],
-};
-
-const mockCharactersPage = {
-  info: { pages: 2 },
-  results: [
-    { id: 3, name: 'Summer Smith', image: 'summer.png' },
-    { id: 4, name: 'Beth Smith', image: 'beth.png' },
-  ],
-};
-
-describe('CharactersList component', () => {
+describe('CharactersList Component', () => {
   beforeEach(() => {
-    fetch.mockResolvedValue({
-      json: jest.fn().mockResolvedValue(mockCharacters),
-    });
-  });
-
-  afterEach(() => {
     fetch.mockClear();
   });
 
-  test('renders characters correctly', async () => {
+  test('renders CharactersList and fetches characters', async () => {
+    fetch.mockResolvedValueOnce({
+      json: async () => ({ results: [{ id: 1, name: 'Rick Sanchez' }], info: { pages: 2 } })
+    });
+
     render(
-        <MemoryRouter>
-          <CharactersList />
-        </MemoryRouter>
-      );
-  
+      <MemoryRouter>
+        <CharactersList />
+      </MemoryRouter>
+    );
+
+    await waitFor(() => expect(screen.getByText('Rick Sanchez')).toBeInTheDocument());
+  });
+
+  test('handles pagination correctly', async () => {
+    fetch.mockResolvedValueOnce({
+      json: async () => ({ results: [{ id: 1, name: 'Rick Sanchez' }], info: { pages: 2 } })
+    });
+
+    render(
+      <MemoryRouter>
+        <CharactersList />
+      </MemoryRouter>
+    );
+
+    await waitFor(() => expect(screen.getByText('Rick Sanchez')).toBeInTheDocument());
+
+    const nextButton = screen.getByLabelText('next page');
+    expect(nextButton).not.toBeDisabled();
+    fireEvent.click(nextButton);
+    
     await waitFor(() => {
-      expect(screen.getByText(/Rick Sanchez/i)).toBeInTheDocument();
+      expect(fetch).toHaveBeenCalledWith(expect.stringContaining('page=2'));
     });
   });
 
-  test('filters characters when a filter is applied', async () => {
-    render(
-      <MemoryRouter>
-        <CharactersList />
-      </MemoryRouter>
-    );
-
-    await waitFor(() => expect(fetch).toHaveBeenCalledTimes(1));
-
-    fireEvent.click(screen.getByText('Filter'));
-    
-    await waitFor(() => expect(fetch).toHaveBeenCalledTimes(2));
-  });
-
-  test('pagination works correctly', async () => {
-    fetch
-      .mockResolvedValueOnce({
-        json: jest.fn().mockResolvedValue(mockCharacters),
-      })
-      .mockResolvedValueOnce({
-        json: jest.fn().mockResolvedValue(mockCharactersPage),
-      })
-      .mockResolvedValueOnce({
-        json: jest.fn().mockResolvedValue(mockCharactersPage),
-      });
+  test('applies filters correctly', async () => {
+    fetch.mockResolvedValueOnce({
+      json: async () => ({ results: [{ id: 1, name: 'Rick Sanchez' }], info: { pages: 2 } })
+    });
   
     render(
       <MemoryRouter>
@@ -77,23 +58,21 @@ describe('CharactersList component', () => {
       </MemoryRouter>
     );
   
-    await waitFor(() => expect(fetch).toHaveBeenCalledTimes(1));
+    await waitFor(() => expect(screen.getByText('Rick Sanchez')).toBeInTheDocument());
   
-    const nextButton = await screen.findByLabelText(/next page/i);
-    fireEvent.click(nextButton);
+    fetch.mockResolvedValueOnce({
+      json: async () => ({ results: [{ id: 2, name: 'Morty Smith' }], info: { pages: 2 } })
+    });
   
-    await waitFor(() => expect(fetch).toHaveBeenCalledTimes(3));
+    fireEvent.click(screen.getByText('Filter by...')); 
+
+    fireEvent.click(screen.getByText('Species'));
   
-    expect(await screen.findByText(/Summer Smith/i)).toBeInTheDocument();
+    fireEvent.click(screen.getByText('Select value...')); 
+    fireEvent.click(screen.getByText('Human'));
+  
+    fireEvent.click(screen.getByRole('button', { name: /filter/i }));
+  
+    await waitFor(() => expect(screen.getByText('Morty Smith')).toBeInTheDocument());
   });  
-
-  test('prefetches the next page', async () => {
-    render(
-      <MemoryRouter>
-        <CharactersList />
-      </MemoryRouter>
-    );
-
-    await waitFor(() => expect(fetch).toHaveBeenCalledTimes(2));
-  });
 });

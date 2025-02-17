@@ -1,5 +1,6 @@
-import React, { useEffect, useState, useRef } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Pagination, Button } from 'semantic-ui-react';
+import { useLocation, useNavigate } from 'react-router-dom';
 
 import './CharactersList.css';
 
@@ -7,78 +8,103 @@ import FilterBar from '../../components/FilterBar';
 import Cards from '../../components/Cards';
 
 export default function CharactersList() {
+  const location = useLocation();
+  const navigate = useNavigate();
+
   const [page, setPage] = useState(1);
   const [characters, setCharacters] = useState([]);
   const [totalPages, setTotalPages] = useState(1);
   const [filters, setFilters] = useState({});
-  const cache = useRef({});
 
-  const fetchCharacters = (pageNumber, appliedFilters) => {
-    const filterParams = Object.entries(appliedFilters)
-      .filter(([_, value]) => value && value !== 'all')
-      .map(([key, value]) => `${key}=${value}`)
-      .join('&');
-  
-    const url = `https://rickandmortyapi.com/api/character/?page=${pageNumber}${filterParams ? `&${filterParams}` : ''}`;
-  
-    if (cache.current[url]) {
-      setCharacters(cache.current[url].results);
-      setTotalPages(cache.current[url].totalPages);
-      return;
-    }
+  useEffect(() => {
+    const params = new URLSearchParams(location.search);
+    const pageFromUrl = Number(params.get('page')) || 1;
+    
+    const filtersFromUrl = {};
+    params.forEach((value, key) => {
+      if (key !== "page") {
+        filtersFromUrl[key] = value;
+      }
+    });
 
-    fetch(url)
-      .then(response => response.json())
-      .then(data => {
+    setPage(pageFromUrl);
+    setFilters(filtersFromUrl);
+  }, [location.search]);
+
+  useEffect(() => {
+    const fetchCharacters = async () => {
+      const filterParams = Object.entries(filters)
+        .filter(([_, value]) => value && value !== 'all')
+        .map(([key, value]) => `${key}=${value}`)
+        .join('&');
+  
+      const url = `https://rickandmortyapi.com/api/character/?page=${page}${filterParams ? `&${filterParams}` : ''}`;
+      
+      const cachedData = sessionStorage.getItem(url);
+      if (cachedData) {
+        const { results, totalPages } = JSON.parse(cachedData);
+        setCharacters(results);
+        setTotalPages(totalPages);
+        console.log('Pobrano z sessionStorage:', url);
+        return;
+      }
+  
+      try {
+        console.log('Wysyłanie zapytania do API:', url);
+        const response = await fetch(url);
+        const data = await response.json();
+  
         if (data.error) {
           console.error("API Error:", data.error);
           setCharacters([]);
           setTotalPages(1);
           return;
         }
-        cache.current[url] = {
+  
+        sessionStorage.setItem(url, JSON.stringify({
           results: data.results,
           totalPages: data.info?.pages || 1
-        };
+        }));
+  
         setCharacters(data.results || []);
         setTotalPages(data.info?.pages || 1);
-      })
-      .catch(error => console.error("Error fetching characters:", error));
-  };
   
-  useEffect(() => {
-    fetchCharacters(page, filters);
-  }, [page, filters]);
-
-  useEffect(() => {
-    const nextPage = page + 1;
-    if (nextPage > totalPages) return;
-
-    const filterParams = Object.entries(filters)
-      .filter(([_, value]) => value && value !== 'all')
-      .map(([key, value]) => `${key}=${value}`)
-      .join('&');
-
-    const nextUrl = `https://rickandmortyapi.com/api/character/?page=${nextPage}${filterParams ? `&${filterParams}` : ''}`;
-
-    if (!cache.current[nextUrl]) {
-      fetch(nextUrl)
-        .then(response => response.json())
-        .then(data => {
-          if (data.error) {
-            console.error("API Error:", data.error);
-            setCharacters([]);
-            setTotalPages(1);
-            return;
+        const nextPage = page + 1;
+        if (nextPage <= (data.info?.pages || 1)) {
+          const nextUrl = `https://rickandmortyapi.com/api/character/?page=${nextPage}${filterParams ? `&${filterParams}` : ''}`;
+          
+          if (!sessionStorage.getItem(nextUrl)) {
+            console.log('Prefetching next page:', nextUrl);
+            fetch(nextUrl)
+              .then(response => response.json())
+              .then(nextData => {
+                if (nextData.error) return;
+  
+                sessionStorage.setItem(nextUrl, JSON.stringify({
+                  results: nextData.results,
+                  totalPages: nextData.info?.pages || 1
+                }));
+  
+                console.log('Następna strona zapisana w sessionStorage:', nextUrl);
+              })
+              .catch(error => console.error("Błąd przy prefetchowaniu następnej strony:", error));
           }
-          cache.current[nextUrl] = {
-            results: data.results,
-            totalPages: data.info?.pages || 1
-          };
-        })
-        .catch(error => console.error("Error prefetching next page:", error));
+        }
+  
+      } catch (error) {
+        console.error("Błąd podczas pobierania postaci:", error);
+      }
+    };
+  
+    fetchCharacters();
+  }, [page, filters]);
+  
+  const handlePageChange = (newPage) => {
+    if (newPage !== page) {
+      navigate(`?page=${newPage}${Object.entries(filters).map(([key, value]) => `&${key}=${value}`).join('')}`);
+      setPage(newPage);
     }
-  }, [page, filters, totalPages]);
+  };
 
   const handleFilter = (key, value) => {
     setFilters(prev => {
@@ -88,10 +114,10 @@ export default function CharactersList() {
       } else {
         updatedFilters[key] = value;
       }
-      
+
+      navigate(`?page=1${Object.entries(updatedFilters).map(([k, v]) => `&${k}=${v}`).join('')}`);
       setPage(1);
 
-      fetchCharacters(1, updatedFilters);
       return updatedFilters;
     });
   };
@@ -102,7 +128,6 @@ export default function CharactersList() {
         <FilterBar onFilter={handleFilter} />
       </nav>
 
-
       <div className="section characters-content">
         <div className="sidebar">
           <Button
@@ -110,7 +135,7 @@ export default function CharactersList() {
             icon="arrow left" 
             style={{ width: '100%', margin: '0.5rem' }} 
             disabled={page === 1}
-            onClick={() => setPage(prev => Math.max(prev - 1, 1))}
+            onClick={() => handlePageChange(page - 1)}
           />
         </div>
 
@@ -124,17 +149,16 @@ export default function CharactersList() {
             icon="arrow right" 
             style={{ width: '100%', margin: '0.5rem' }} 
             disabled={page === totalPages}
-            onClick={() => setPage(prev => Math.min(prev + 1, totalPages))}
+            onClick={() => handlePageChange(page + 1)}
           />
         </div> 
       </div>
-
 
       <footer className="section footer">
         <Pagination 
           activePage={page} 
           totalPages={totalPages} 
-          onPageChange={(_, { activePage }) => setPage(activePage)}
+          onPageChange={(_, { activePage }) => handlePageChange(activePage)}
           size="mini"
         />
       </footer>
