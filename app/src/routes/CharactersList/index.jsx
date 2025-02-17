@@ -18,8 +18,13 @@ export default function CharactersList() {
       .filter(([_, value]) => value && value !== 'all')
       .map(([key, value]) => `${key}=${value}`)
       .join('&');
-
+  
     const url = `https://rickandmortyapi.com/api/character/?page=${pageNumber}${filterParams ? `&${filterParams}` : ''}`;
+  
+    if (cache.current[url]) {
+      setCharacters(cache.current[url]);
+      return;
+    }
 
     fetch(url)
       .then(response => response.json())
@@ -30,6 +35,7 @@ export default function CharactersList() {
       })
       .catch(error => console.error("Error fetching characters:", error));
   };
+  
 
   useEffect(() => {
     fetchCharacters(page, filters);
