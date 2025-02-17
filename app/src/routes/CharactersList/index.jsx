@@ -45,17 +45,14 @@ export default function CharactersList() {
         const { results, totalPages } = JSON.parse(cachedData);
         setCharacters(results);
         setTotalPages(totalPages);
-        console.log('Pobrano z sessionStorage:', url);
         return;
       }
   
       try {
-        console.log('Wysyłanie zapytania do API:', url);
         const response = await fetch(url);
         const data = await response.json();
   
         if (data.error) {
-          console.error("API Error:", data.error);
           setCharacters([]);
           setTotalPages(1);
           return;
@@ -74,7 +71,6 @@ export default function CharactersList() {
           const nextUrl = `https://rickandmortyapi.com/api/character/?page=${nextPage}${filterParams ? `&${filterParams}` : ''}`;
           
           if (!sessionStorage.getItem(nextUrl)) {
-            console.log('Prefetching next page:', nextUrl);
             fetch(nextUrl)
               .then(response => response.json())
               .then(nextData => {
@@ -85,7 +81,6 @@ export default function CharactersList() {
                   totalPages: nextData.info?.pages || 1
                 }));
   
-                console.log('Następna strona zapisana w sessionStorage:', nextUrl);
               })
               .catch(error => console.error("Błąd przy prefetchowaniu następnej strony:", error));
           }
