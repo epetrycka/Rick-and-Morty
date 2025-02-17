@@ -1,11 +1,7 @@
 import React from 'react';
 import { render, screen } from '@testing-library/react';
-import { MemoryRouter } from 'react-router-dom';
+import { BrowserRouter } from 'react-router-dom';
 import App from './App';
-import Navbar from './components/Navbar';
-import Main from './routes/main';
-import CharactersList from './routes/CharactersList';
-import CharacterInfo from './routes/CharacterInfo';
 import '@testing-library/jest-dom';
 
 jest.mock('./components/Navbar', () => jest.fn(() => <nav data-testid="navbar">Navbar</nav>));
@@ -16,39 +12,41 @@ jest.mock('./routes/CharacterInfo', () => jest.fn(() => <div data-testid="charac
 describe('App Component', () => {
   test('renders Navbar', () => {
     render(
-      <MemoryRouter>
+      <BrowserRouter>
         <App />
-      </MemoryRouter>
+      </BrowserRouter>
     );
-
     expect(screen.getByTestId('navbar')).toBeInTheDocument();
   });
 
   test('renders Main page by default', () => {
     render(
-      <MemoryRouter initialEntries={['/']}>
+      <BrowserRouter>
         <App />
-      </MemoryRouter>
+      </BrowserRouter>
     );
-
     expect(screen.getByTestId('main-page')).toBeInTheDocument();
   });
 
   test('renders CharactersList when navigating to /characters-list', () => {
+    window.history.pushState({}, 'Characters List', '/characters-list');
+
     render(
-      <MemoryRouter initialEntries={['/characters-list']}>
+      <BrowserRouter>
         <App />
-      </MemoryRouter>
+      </BrowserRouter>
     );
 
     expect(screen.getByTestId('characters-list')).toBeInTheDocument();
   });
 
-  test('renders CharacterInfo when navigating to /character-info', () => {
+  test('renders CharacterInfo when navigating to /character-info/:id', () => {
+    window.history.pushState({}, 'Character Info', '/character-info/1');
+
     render(
-      <MemoryRouter initialEntries={['/character-info']}>
+      <BrowserRouter>
         <App />
-      </MemoryRouter>
+      </BrowserRouter>
     );
 
     expect(screen.getByTestId('character-info')).toBeInTheDocument();
