@@ -8,7 +8,6 @@ export default function CharacterCard({ character }) {
   return (
     <Card style={{
       borderRadius: '10px',
-      overflow: 'hidden',
       boxShadow: '0px 4px 10px rgba(0,0,0,0.2)',
       display: 'flex',
       flexDirection: 'row',
@@ -44,7 +43,6 @@ export default function CharacterCard({ character }) {
           fontSize: 'clamp(0.6rem, 1.5vw, 1rem)',
           lineHeight: '2',
           whiteSpace: 'nowrap', 
-          overflow: 'hidden', 
           textOverflow: 'ellipsis'
         }}>
           {character.name}
@@ -54,7 +52,6 @@ export default function CharacterCard({ character }) {
           fontSize: 'clamp(0.5rem, 1vw, 0.9rem)',
           lineHeight: '1',
           whiteSpace: 'nowrap',
-          overflow: 'hidden',
           textOverflow: 'ellipsis'
         }}>
           <span>{character.status} - {character.species}</span>
@@ -64,7 +61,6 @@ export default function CharacterCard({ character }) {
           fontSize: 'clamp(0.5rem, 1vw, 0.9rem)',
           lineHeight: '1',
           whiteSpace: 'nowrap',
-          overflow: 'hidden',
           textOverflow: 'ellipsis'
         }}>
           Gender: {character.gender}

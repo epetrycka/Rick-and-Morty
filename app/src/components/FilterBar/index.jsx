@@ -65,6 +65,7 @@ export default function FilterBar({ onFilter }) {
   return (
     <div style={{ 
       display: 'flex', 
+      flexWrap: 'wrap',
       alignItems: 'center', 
       justifyContent: 'space-between', 
       gap: '0.5rem'
