@@ -36,39 +36,53 @@ export default function CharacterCard({ character }) {
         }}
       />
     
-      <Card.Content style={{
-        flex: 1, 
-        border: 'none', 
-        padding: '0.5rem',
-        display: 'flex', 
-        flexDirection: 'column',
-        justifyContent: 'center',
-        overflow: 'hidden'
-      }}>
-        <Card.Header style={{
-          fontSize: 'clamp(0.6rem, 1.5vw, 1rem)',
-          lineHeight: '2',
-          whiteSpace: 'nowrap', 
-          textOverflow: 'ellipsis'
-        }}>
+      <Card.Content
+        style={{
+          flex: 1,
+          border: 'none',
+          padding: '0.5rem',
+          display: 'flex',
+          flexDirection: 'column',
+          justifyContent: 'center',
+          overflow: 'hidden'
+        }}
+      >
+        <Card.Header
+          style={{
+            fontSize: 'clamp(0.6rem, 1.5vw, 1rem)',
+            lineHeight: '2',
+            whiteSpace: 'nowrap',
+            textOverflow: 'ellipsis',
+            overflow: 'hidden',
+            maxWidth: '90%'
+          }}
+        >
           {character.name}
         </Card.Header>
-        
-        <Card.Meta style={{
-          fontSize: 'clamp(0.5rem, 1vw, 0.9rem)',
-          lineHeight: '1',
-          whiteSpace: 'nowrap',
-          textOverflow: 'ellipsis'
-        }}>
+
+        <Card.Meta
+          style={{
+            fontSize: 'clamp(0.5rem, 1vw, 0.9rem)',
+            lineHeight: '1',
+            whiteSpace: 'nowrap',
+            textOverflow: 'ellipsis',
+            overflow: 'hidden',
+            maxWidth: '90%'
+          }}
+        >
           <span>{character.status} - {character.species}</span>
         </Card.Meta>
-    
-        <Card.Description style={{
-          fontSize: 'clamp(0.5rem, 1vw, 0.9rem)',
-          lineHeight: '1',
-          whiteSpace: 'nowrap',
-          textOverflow: 'ellipsis'
-        }}>
+
+        <Card.Description
+          style={{
+            fontSize: 'clamp(0.5rem, 1vw, 0.9rem)',
+            lineHeight: '1',
+            whiteSpace: 'nowrap',
+            textOverflow: 'ellipsis',
+            overflow: 'hidden',
+            maxWidth: '90%'
+          }}
+        >
           Gender: {character.gender}
         </Card.Description>
       </Card.Content>
