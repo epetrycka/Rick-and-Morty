@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Input, Button, Select, Label } from 'semantic-ui-react';
+import { Button, Select, Label } from 'semantic-ui-react';
 
 const filterOptions = [
   { key: 'status', text: 'Status', value: 'status' },
@@ -67,19 +67,23 @@ export default function FilterBar({ onFilter }) {
       display: 'flex', 
       alignItems: 'center', 
       justifyContent: 'space-between', 
-      gap: '0.5rem' }}>
-      <div style={{ display: 'flex', gap: '0.5rem', flexWrap: 'wrap' }}>
+      gap: '0.5rem'
+    }}>
+      <div style={{ 
+        display: 'flex', 
+        gap: '0.5rem', 
+        flexWrap: 'wrap' 
+      }}>
+
         {Object.entries(activeFilters).map(([key, value]) => (
           <Label key={key} color='blue'>
             {key}: {value}
-            <Button role='button'
+            <Button circular compact icon='close'
+              role='button'
               aria-label='close'
-              icon='close'
               size='mini'
-              circular
-              compact
-              onClick={() => removeFilter(key)}
               style={{ marginLeft: '0.5rem' }}
+              onClick={() => removeFilter(key)}
             />
           </Label>
         ))}

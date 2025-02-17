@@ -17,7 +17,6 @@ export default function App() {
       <Routes>
         <Route path="/" element={<Main />} />
         <Route path="/characters-list" element={<CharactersList />} />
-        <Route path="/character-info" element={<CharacterInfo />} />
         <Route path="/character-info/:id" element={<CharacterInfo />} />
       </Routes>
     </div>

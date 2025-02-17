@@ -1,8 +1,10 @@
 import React, { useEffect, useState, useRef } from 'react';
+import { Pagination, Button } from 'semantic-ui-react';
+
 import './CharactersList.css';
+
 import FilterBar from '../../components/FilterBar';
 import Cards from '../../components/Cards';
-import { Pagination, Button } from 'semantic-ui-react';
 
 export default function CharactersList() {
   const [page, setPage] = useState(1);
@@ -73,32 +75,38 @@ export default function CharactersList() {
 
   return (
     <div className="characters-container">
-      <nav className="section nav">
+      <nav className="section filter">
         <FilterBar onFilter={handleFilter} />
       </nav>
-      <div className="section main-content">
+
+
+      <div className="section characters-content">
         <div className="sidebar">
           <Button
             aria-label='arrow left'
             icon="arrow left" 
-            style={{ width: '100%', margin: '2rem' }} 
+            style={{ width: '100%', margin: '0.5rem' }} 
             disabled={page === 1}
             onClick={() => setPage(prev => Math.max(prev - 1, 1))}
           />
         </div>
-        <div className="content">
+
+        <div className="cards-content">
           <Cards characters={characters} />
         </div>
+
         <div className="sidebar">
           <Button 
             aria-label="next page"
             icon="arrow right" 
-            style={{ width: '100%', margin: '2rem' }} 
+            style={{ width: '100%', margin: '0.5rem' }} 
             disabled={page === totalPages}
             onClick={() => setPage(prev => Math.min(prev + 1, totalPages))}
           />
-        </div>
+        </div> 
       </div>
+
+
       <footer className="section footer">
         <Pagination 
           activePage={page} 

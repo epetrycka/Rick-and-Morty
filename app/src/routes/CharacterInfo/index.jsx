@@ -30,7 +30,7 @@ export default function CharacterInfo() {
   return (
       <div className="info-container">
         <header className="section nav"></header>
-        <div className="section main-content">
+        <div className="section info-content">
           <aside className="section sidebarInfo"></aside>
           <main className="section contentInfo">
             <div className="leftColumn">

@@ -11,26 +11,13 @@ export default function Cards({ characters = [] }) {
   const columns = 5;
 
   return (
-    <Grid 
-      style={{ 
-        height: '100%', 
-        display: 'flex', 
-        flexDirection: 'column', 
-        flexGrow: 1 
-      }} 
-      role='grid'
-    >
+    <Grid style={{ height: '100%'}} role='grid'>
       {[...Array(rows)].map((_, rowIndex) => (
-        <GridRow 
-          key={rowIndex} 
-          columns={columns} 
-          role="row"
-          style={{ flexGrow: 1 }}
-        >
+        <GridRow key={rowIndex} columns={columns} role='row'>
           {characters
             .slice(rowIndex * columns, (rowIndex + 1) * columns)
             .map((character, colIndex) => (
-              <GridColumn key={colIndex} role="gridcell">
+              <GridColumn key={colIndex} role='gridcell'>
                 <CharacterCard character={character} />
               </GridColumn>
             ))}
