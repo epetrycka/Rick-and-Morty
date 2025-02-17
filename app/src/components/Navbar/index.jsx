@@ -10,7 +10,7 @@ export default function Navbar() {
         width: '100%', 
         display: 'flex', 
         alignItems: 'center', 
-        padding: '0 1rem' 
+        padding: '0 1%' 
         }}>
 
       <Menu.Item position='left'>
